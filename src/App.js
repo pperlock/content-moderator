@@ -1,9 +1,9 @@
 import logo from './logo.svg';
-import './App.css';
 
 import Post from './components/Post/Post';
 
 function App() {
+  document.title="Content Moderator";
   return (
     <Post/>
   );
