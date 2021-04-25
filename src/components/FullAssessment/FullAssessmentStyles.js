@@ -1,11 +1,10 @@
 import {makeStyles} from '@material-ui/core/styles';
 
-const useAssessmentStyles = makeStyles((theme)=> ({
+const useAssessmentStyles = makeStyles(()=> ({
     card:{
         margin:'20px 0',
         padding:'40px'
     },
-
     flaggedInfo:{
         marginTop:20,
         borderTop:'1px solid grey'
@@ -18,11 +17,12 @@ const useAssessmentStyles = makeStyles((theme)=> ({
         color:'white',
         marginBottom:"10px",
         display:"flex",
-        justifyContent:"space-between"
+        justifyContent:"space-between",
+        alignItems:"center"
     },
     category:{
         display:"flex",
-        alignItems:"center"
+        alignItems:"center",
     },
     sectionDivider:{
         borderBottom:"1px solid grey",
@@ -35,7 +35,14 @@ const useAssessmentStyles = makeStyles((theme)=> ({
     },
     responseTime:{
         textAlign:"right",
-        width:'100%'
+        width:'100%',
+        marginBottom:10
+    },
+    accordionDetails:{
+        display:"block"
+    },
+    noEvaluation:{
+        color:"red"
     }
 }));
 

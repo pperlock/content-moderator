@@ -1,8 +1,9 @@
-import {makeStyles} from '@material-ui/core/styles';
+import {makeStyles, withStyles} from '@material-ui/core/styles';
+import { Tooltip } from '@material-ui/core';
 
-const useCategoryStyles = makeStyles((theme)=> ({
+const useCategoryStyles = makeStyles(()=> ({
     infoIcon:{
-        color:'rgba(50,50,50,0.5)',
+        color:'#d3d3d3',
         height:20,
         marginLeft:10
     },
@@ -15,7 +16,20 @@ const useCategoryStyles = makeStyles((theme)=> ({
     },
     categoryScore:{
         fontWeight:'normal'
+    },
+    categoryDescription:{
+        fontSize:12,
+        color:'#3a3b3c'
     }
 }));
 
-export default useCategoryStyles;
+const InfoTooltip = withStyles({
+    tooltip: {
+      color: "black",
+      backgroundColor: "transparent",
+      fontSize:12
+    }
+})(Tooltip);
+
+
+export {useCategoryStyles as default, InfoTooltip};

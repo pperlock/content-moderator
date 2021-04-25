@@ -1,12 +1,23 @@
 import React from 'react'
 
-import {Typography} from '@material-ui/core';
+//Material UI imports
+import {Zoom} from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import NotInterestedIcon from '@material-ui/icons/NotInterested';
 
-import useEvaluationStyles from './EvaluationStyles';
+//Styling imports
+import useEvaluationStyles, {WarningTooltip, ApprovedTooltip} from './EvaluationStyles';
 
-function Evaluation({condition, trueText, falseText}) {
+/**
+ * Component: Evaluation
+ * returns the appropriate icon and tooltip based on the condition passed in
+ * @param {Boolean} condition
+ * @param {String} trueText
+ * @param {String} falseText
+ * @param {String} toolTipPlacement 
+ */
+
+function Evaluation({condition, trueText, falseText, toolTipPlacement}) {
 
     const classes = useEvaluationStyles();
 
@@ -14,13 +25,15 @@ function Evaluation({condition, trueText, falseText}) {
         <>
             {condition ?
             <div className={classes.category}>
-                <NotInterestedIcon className={classes.deniedIcon}/> 
-                <Typography variant="button" className={classes.denied}> {trueText} </Typography>
+                <WarningTooltip placement={toolTipPlacement} title={trueText} transitioncomponent={Zoom} arrow>
+                    <NotInterestedIcon className={classes.deniedIcon}/> 
+                </WarningTooltip>
             </div>
             : 
             <div className={classes.category}>
-                <CheckCircleIcon className={classes.approvedIcon}/>
-                <Typography variant="button" className={classes.approved}> {falseText} </Typography>
+                <ApprovedTooltip placement={toolTipPlacement} title={falseText} transitioncomponent={Zoom} arrow>
+                    <CheckCircleIcon className={classes.approvedIcon}/>
+                </ApprovedTooltip>
             </div>
             }
         </>

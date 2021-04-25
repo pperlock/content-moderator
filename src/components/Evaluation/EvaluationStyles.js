@@ -1,6 +1,8 @@
-import {makeStyles} from '@material-ui/core/styles';
+import {makeStyles, withStyles} from '@material-ui/core/styles';
 
-const useEvaluationStyles = makeStyles((theme)=> ({
+import {Tooltip} from '@material-ui/core';
+
+const useEvaluationStyles = makeStyles(()=> ({
     approved:{
         color:"green",
     },
@@ -19,6 +21,24 @@ const useEvaluationStyles = makeStyles((theme)=> ({
         display:"flex",
         alignItems:"center"
     },
+    tooltipWarning:{
+        backgroundColor:"red",
+        color:'white'
+    }
 }));
 
-export default useEvaluationStyles;
+const WarningTooltip = withStyles({
+    tooltip: {
+      color: "white",
+      backgroundColor: "red"
+    }
+})(Tooltip);
+
+const ApprovedTooltip = withStyles({
+    tooltip: {
+      color: "white",
+      backgroundColor: "green"
+    }
+})(Tooltip);
+
+export {useEvaluationStyles as default, WarningTooltip, ApprovedTooltip};

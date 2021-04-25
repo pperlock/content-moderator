@@ -1,21 +1,34 @@
 import React from 'react'
-import { Typography, Tooltip } from '@material-ui/core';
+
+//Material UI imports
+import { Typography, Zoom } from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/Info';
 
-import useCategoryStyles from './CategoryStyles';
+//Import Child components
 import RatingSlider from '../../components/RatingSlider/RatingSlider';
 
-function Category({categoryNum, score, tooltip}) {
+//Styling imports
+import useCategoryStyles, {InfoTooltip} from './CategoryStyles';
+
+/**
+ * 
+ * @param {String} categoryNum
+ * @param {Number} score
+ * @param {String} categoryDescription 
+ * @param {String} tooltip
+ */
+
+function Category({categoryNum, score, categoryDescription, tooltip}) {
 
     const classes = useCategoryStyles();
-
+    
     return (
         <>
             <div className={classes.category}>
-            <Typography variant="subtitle1" className={classes.categoryTitle}> Category {categoryNum}</Typography>
-                <Tooltip placement="right" title={tooltip}>
+            <Typography variant="subtitle1" className={classes.categoryTitle}> Category {categoryNum}: <span className={classes.categoryDescription}>({categoryDescription})</span> </Typography>
+                <InfoTooltip placement="right" title={tooltip} transitioncomponent={Zoom} arrow>
                     <InfoIcon className={classes.infoIcon}/>
-                </Tooltip>
+                </InfoTooltip>
             </div>
             <RatingSlider value={score.toFixed(2)}/>
         </>
