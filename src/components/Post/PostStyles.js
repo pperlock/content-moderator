@@ -50,11 +50,6 @@ const usePostStyles = makeStyles((theme)=> ({
         marginBottom:"10px",
         display:"flex",
         justifyContent:"space-between"
-    },
-    titleBar:{
-        padding:20,
-        backgroundColor:'black',
-        color:'white'
     }
 }));
 
