@@ -23,6 +23,19 @@ const useAssessmentStyles = makeStyles((theme)=> ({
     category:{
         display:"flex",
         alignItems:"center"
+    },
+    sectionDivider:{
+        borderBottom:"1px solid grey",
+        margin:'20px 0'
+    },
+    piiCategory:{
+        fontWeight:'bold',
+        fontSize:14,
+        padding:'15px 0 0 0',
+    },
+    responseTime:{
+        textAlign:"right",
+        width:'100%'
     }
 }));
 

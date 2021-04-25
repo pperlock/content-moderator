@@ -3,7 +3,7 @@ import axios from 'axios';
 import Post from './components/Post/Post';
 import FullAssessment from './components/FullAssessment/FullAssessment';
 
-import { CssBaseline, AppBar, Typography } from '@material-ui/core';
+import { CssBaseline, AppBar, Typography, Container } from '@material-ui/core';
 import useGlobalStyles from './globalStyles.js';
 
 function App() {
@@ -12,16 +12,20 @@ function App() {
 
 	const classes = useGlobalStyles();
 
-	const [postImage, setPostImage] = useState("");
+	const [postImage, setPostImage] = useState(null);
 	const [imageType, setImageType] = useState("");
-	const [showLoading, setShowLoading] = useState(false);
 	const [textRequestTime, setTextRequestTime] = useState("");
 	const [imageRequestTime, setImageRequestTime] = useState("");
 
-	const [textEvaluation, setTextEvaluation] = useState({Classification:{Category1:{Score:0}, Category2:{Score:0}, Category3:{Score:0}}, Terms:[], PII:{}});
+	const [textEvaluation, setTextEvaluation] = useState({Classification:{Category1:{Score:0}, Category2:{Score:0}, Category3:{Score:0}}});
 	const [imageEvaluation, setImageEvaluation] = useState({RacyClassificationScore:0, AdultClassificationScore:0});
 
+	const [isImageEvaluated, setIsImageEvaluated] = useState(false);
+	const [isTextEvaluated, setIsTextEvaluated] = useState(false);
+
 	const evaluateContent = event =>{
+
+		event.preventDefault();
 
 		axios.interceptors.request.use( x => {
 			// to avoid overwriting if another interceptor
@@ -41,33 +45,45 @@ function App() {
 				throw x;
 			}
 		)
+		
+		//Make call to Text Moderator if there Text has been entered
+		if (event.target.postContent.value !== " "){
+			axios({
+				method:'post',
+				url:'https://pperlock-content-moderator.cognitiveservices.azure.com//contentmoderator/moderate/v1.0/ProcessText/Screen/?classify=True',
+				data: event.target.postContent.value,
+				headers:{
+					'Content-type': 'text/plain',
+					'Ocp-apim-subscription-key': process.env.REACT_APP_AZURE_SUBSCRIPTION_KEY 
+				}
+			})
+			.then(res=>{
+				setTextEvaluation({Classification:res.data.Classification, Terms: res.data.Terms, PII: res.data.PII})
+				setIsTextEvaluated(true);
+			})
+			.catch(err=>{
+				console.log(err);
+			})
+		}
 
-		event.preventDefault();
-		axios({
-			method:'post',
-			url:'https://pperlock-content-moderator.cognitiveservices.azure.com//contentmoderator/moderate/v1.0/ProcessText/Screen/?classify=True',
-			data: event.target.postContent.value,
-			headers:{
-				'Content-type': 'text/plain',
-				'Ocp-apim-subscription-key': process.env.REACT_APP_AZURE_SUBSCRIPTION_KEY 
-			}
-		})
-		.then(res=>{
-			setTextEvaluation({Classification:res.data.Classification, Terms: res.data.Terms, PII: res.data.PII})
-		})
-
-		axios({
-			method:'post',
-			url:'https://pperlock-content-moderator.cognitiveservices.azure.com//contentmoderator/moderate/v1.0/ProcessImage/Evaluate',
-			data: postImage,
-			headers:{
-				'Content-type': imageType,
-				'Ocp-apim-subscription-key': process.env.REACT_APP_AZURE_SUBSCRIPTION_KEY 
-			}
-		})
-		.then(res=>{
-			setImageEvaluation(res.data);
-		})
+		if (!!postImage) {
+			axios({
+				method:'post',
+				url:'https://pperlock-content-moderator.cognitiveservices.azure.com//contentmoderator/moderate/v1.0/ProcessImage/Evaluate',
+				data: postImage,
+				headers:{
+					'Content-type': imageType,
+					'Ocp-apim-subscription-key': process.env.REACT_APP_AZURE_SUBSCRIPTION_KEY 
+				}
+			})
+			.then(res=>{
+				setImageEvaluation(res.data);
+				setIsImageEvaluated(true);
+			})
+			.catch(err=>{
+				console.log(err)
+			})
+		}
 	}
 
 	const fileSelectedHandler = (event) => {
@@ -105,6 +121,7 @@ function App() {
                 Content Moderator
             </Typography>
         </AppBar>
+		<Container>
 		<Post 
 			onDrop={onDrop} 
 			onDragEnter={onDragEnter} 
@@ -112,14 +129,16 @@ function App() {
 			fileSelectedHandler={fileSelectedHandler}
 			evaluateContent={evaluateContent} 
 			postImage={postImage} 
-			showLoading={showLoading}
 		/>
 		<FullAssessment 
 			textEvaluation={textEvaluation} 
 			imageEvaluation={imageEvaluation}
 			textRequestTime = {textRequestTime}
 			imageRequestTime = {imageRequestTime}
+			isTextEvaluated = {isTextEvaluated}
+			isImageEvaluated = {isImageEvaluated}
 		/>
+		</Container>
     </>
   );
 }
