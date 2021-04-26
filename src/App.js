@@ -66,7 +66,7 @@ function App() {
 		if (event.target.postContent.value !== " "){
 			axios({
 				method:'post',
-				url:'https://pperlock-content-moderator.cognitiveservices.azure.com//contentmoderator/moderate/v1.0/ProcessText/Screen/?classify=True',
+				url:process.env.REACT_APP_AZURE_TEXT_ENDPOINT,
 				data: event.target.postContent.value,
 				headers:{
 					'Content-type': 'text/plain',
@@ -86,7 +86,7 @@ function App() {
 		if (!!postImage) {
 			axios({
 				method:'post',
-				url:'https://pperlock-content-moderator.cognitiveservices.azure.com//contentmoderator/moderate/v1.0/ProcessImage/Evaluate',
+				url:process.env.REACT_APP_AZURE_IMAGE_ENDPOINT,
 				data: postImage,
 				headers:{
 					'Content-type': imageType,
@@ -125,7 +125,6 @@ function App() {
 		event.stopPropagation();
 		event.preventDefault();  
 	}
-
 	return (
 		<>
 			<CssBaseline/>
